@@ -4,7 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#c91524">
-<title>MY PASAR MALAM — 线上夜市</title>
+<title>NaNaGo Pasar Malam — 线上夜市</title>
+<meta name="description" content="NaNaGo Pasar Malam：让夜市走进每一个家庭，让小档主拥有自己的线上生意。">
+<link rel="icon" type="image/png" href="./nanago-app-icon.png">
 <style>
 :root{--red:#c91524;--red2:#ed2939;--ink:#171717;--muted:#777;--cream:#fff8ec;--yellow:#ffd43b;--green:#168447;--line:#eee4d8}
 *{box-sizing:border-box}body{margin:0;background:#f4f1ec;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans SC",sans-serif}
@@ -37,13 +39,16 @@ button{font:inherit;cursor:pointer;border:0}.app{max-width:480px;margin:0 auto;m
 .empty{text-align:center;color:#888;padding:45px 15px;font-size:13px}
 .footerhint{text-align:center;color:#aaa;font-size:10px;padding:20px 10px}
 @media(min-width:520px){body{padding:18px 0}.app{border-radius:24px;overflow:hidden;min-height:calc(100vh - 36px)}.bottom{bottom:18px;border-radius:0 0 24px 24px}}
+
+.add { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.add:disabled, .add.added { opacity: .85; }
 </style>
 </head>
 <body>
 <div class="app">
   <div id="homePage" class="page active">
     <header class="top">
-      <div class="brandrow"><div class="brand">🔥 MY PASAR MALAM<small>YOUR NIGHT MARKET, IN YOUR PHONE</small></div><div class="pill">试用版 · OUG</div></div>
+      <div class="brandrow"><div class="brand">NaNaGo<small>PASAR MALAM · YOUR NIGHT MARKET, IN YOUR PHONE</small></div><div class="pill">试用版 · OUG</div></div>
       <div class="greeting">今晚想逛哪一个<br><span>Pasar Malam？</span></div>
       <div class="sub">不用淋雨、不用找停车位，打开手机逛夜市。</div>
       <div class="search">⌕　搜索美食、摊位或品牌</div>
@@ -72,7 +77,7 @@ button{font:inherit;cursor:pointer;border:0}.app{max-width:480px;margin:0 auto;m
       </div>
     </section>
     <div class="feature"><div class="featureicon">🌧️</div><div><b>下雨天，也能逛夜市</b><p>先在线上选好美食，再安排取餐或配送。让夜市美味不受天气影响。</p></div></div>
-    <div class="footerhint">MY PASAR MALAM · OUG PILOT DEMO<br>摊位及菜单为概念演示，尚未连接真实商家。</div>
+    <div class="footerhint">NaNaGo Pasar Malam · OUG PILOT DEMO<br>摊位及菜单为概念演示，尚未连接真实商家。</div>
   </div>
 
   <div id="vendorPage" class="page">
@@ -101,7 +106,7 @@ button{font:inherit;cursor:pointer;border:0}.app{max-width:480px;margin:0 auto;m
   </div>
 
   <div id="successPage" class="page">
-    <div class="success"><div class="check">🎉</div><h2>订单已建立！</h2><p>这是 MY PASAR MALAM 的体验订单。<br>真实版本上线后，这里会把订单送到摊主端，并显示取餐状态。</p><div class="summary" id="successDetails" style="text-align:left"></div><button class="primary" onclick="resetDemo()">回到线上夜市</button></div>
+    <div class="success"><div class="check">🎉</div><h2>订单已建立！</h2><p>这是 NaNaGo Pasar Malam 的体验订单。<br>真实版本上线后，这里会把订单送到摊主端，并显示取餐状态。</p><div class="summary" id="successDetails" style="text-align:left"></div><button class="primary" onclick="resetDemo()">回到线上夜市</button></div>
   </div>
 
   <nav class="bottom">
@@ -141,9 +146,50 @@ const menus={
 };
 let cart={},method='pickup',lastVendor='ahboy';
 function showPage(id,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');if(btn){document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));btn.classList.add('active')}window.scrollTo(0,0);if(id==='cartPage')renderCart();if(id==='checkoutPage')renderCheckout()}
-function openVendor(key){lastVendor=key;const v=menus[key];document.getElementById('vendorTitle').textContent=v.title;document.getElementById('vendorSubtitle').textContent=v.subtitle;if(v.storefront){document.getElementById('menuList').innerHTML=`<img class="menuposter" src="${v.storefront}" alt="串上瘾烤夜市烧烤摊位门面" style="width:100%;border-radius:14px;margin:12px 0"><div class="menuitem"><div class="menuemoji">🍢</div><div class="menudesc"><b>串上瘾烤 · 夜市烧烤</b><p>${v.description}</p></div></div>`+v.items.map(i=>`<div class="menuitem">${i.photo?`<img src="${i.photo}" alt="${i.name}" style="width:112px;height:112px;object-fit:cover;border-radius:12px;margin-right:12px">`:''}<div class="menudesc"><b>${i.name}</b><p>${i.desc}</p><div class="price">RM ${i.price.toFixed(2)}</div><button class="add" onclick="addItem('${key}','${i.id}')">＋ 加入购物车</button></div></div>`).join('');}else{document.getElementById('menuList').innerHTML=(v.poster?`<img class="menuposter" src="${v.poster}" alt="AH BOY 槟城炒粿条菜单">`: '')+v.items.map(i=>`<div class="menuitem"><div class="menuemoji">${i.emoji}</div><div class="menudesc"><b>${i.name}</b><p>${i.desc}</p><div class="price">RM ${i.price.toFixed(2)}</div><button class="add" onclick="addItem('${key}','${i.id}')">＋ 加入购物车</button></div></div>`).join('');}showPage('vendorPage')}
-function addItem(vendor,id){let item=menus[vendor].items.find(x=>x.id===id);if(cart[id])cart[id].qty++;else cart[id]={...item,qty:1,vendor:menus[vendor].title};updateCount();const b=document.querySelector('.add');if(b){b.textContent='已加入 ✓';setTimeout(()=>b.textContent='＋ 加入购物车',800)}}
-function updateCount(){let n=Object.values(cart).reduce((a,x)=>a+x.qty,0);document.getElementById('navCount').textContent=n?`(${n})`:'';document.getElementById('cartCount').textContent=n+' 件商品'}
+function openVendor(key){lastVendor=key;const v=menus[key];document.getElementById('vendorTitle').textContent=v.title;document.getElementById('vendorSubtitle').textContent=v.subtitle;if(v.storefront){document.getElementById('menuList').innerHTML=`<img class="menuposter" src="${v.storefront}" alt="串上瘾烤夜市烧烤摊位门面" style="width:100%;border-radius:14px;margin:12px 0"><div class="menuitem"><div class="menuemoji">🍢</div><div class="menudesc"><b>串上瘾烤 · 夜市烧烤</b><p>${v.description}</p></div></div>`+v.items.map(i=>`<div class="menuitem">${i.photo?`<img src="${i.photo}" alt="${i.name}" style="width:112px;height:112px;object-fit:cover;border-radius:12px;margin-right:12px">`:''}<div class="menudesc"><b>${i.name}</b><p>${i.desc}</p><div class="price">RM ${i.price.toFixed(2)}</div><button class="add" type="button" data-action="add-to-cart" data-vendor="${key}" data-item-id="${i.id}">＋ 加入购物车</button></div></div>`).join('');}else{document.getElementById('menuList').innerHTML=(v.poster?`<img class="menuposter" src="${v.poster}" alt="AH BOY 槟城炒粿条菜单">`: '')+v.items.map(i=>`<div class="menuitem"><div class="menuemoji">${i.emoji}</div><div class="menudesc"><b>${i.name}</b><p>${i.desc}</p><div class="price">RM ${i.price.toFixed(2)}</div><button class="add" type="button" data-action="add-to-cart" data-vendor="${key}" data-item-id="${i.id}">＋ 加入购物车</button></div></div>`).join('');}showPage('vendorPage')}
+function addItem(vendor,id,button){
+  const menu = menus[vendor];
+  if (!menu || !Array.isArray(menu.items)) {
+    console.error('找不到摊位菜单：', vendor);
+    return;
+  }
+  const item = menu.items.find(x => String(x.id) === String(id));
+  if (!item) {
+    console.error('找不到菜单商品：', vendor, id);
+    return;
+  }
+  // Include vendor in the key so different stalls can never overwrite each other's item.
+  const cartKey = vendor + ':' + id;
+  if (cart[cartKey]) cart[cartKey].qty += 1;
+  else cart[cartKey] = {...item, qty:1, vendor:menu.title};
+  updateCount();
+  if (button) {
+    button.textContent = '已加入 ✓';
+    button.classList.add('added');
+    button.disabled = true;
+    window.setTimeout(() => {
+      button.textContent = '＋ 加入购物车';
+      button.classList.remove('added');
+      button.disabled = false;
+    }, 900);
+  }
+}
+// Delegated event handling: menu items are rendered dynamically after a stall is opened.
+document.addEventListener('click', function(event) {
+  const button = event.target.closest && event.target.closest('button[data-action="add-to-cart"]');
+  if (!button) return;
+  event.preventDefault();
+  event.stopPropagation();
+  if (button.disabled) return;
+  addItem(button.dataset.vendor, button.dataset.itemId, button);
+});
+function updateCount(){
+  const n = Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
+  const navCount = document.getElementById('navCount');
+  const cartCount = document.getElementById('cartCount');
+  if (navCount) navCount.textContent = n ? `(${n})` : '';
+  if (cartCount) cartCount.textContent = n + ' 件商品';
+}
 function total(){return Object.values(cart).reduce((a,x)=>a+x.price*x.qty,0)}
 function renderCart(){let entries=Object.entries(cart);let n=entries.reduce((a,[k,x])=>a+x.qty,0);document.getElementById('cartCount').textContent=n+' 件商品';if(!n){document.getElementById('cartItems').innerHTML='<div class="empty">🛒<br><br>购物车还是空的<br>去夜市逛逛，发现今晚想吃的美食吧！<br><br><button class="view" onclick="showPage(\'homePage\')">去逛夜市</button></div>';document.getElementById('cartSummary').innerHTML='';return}
 document.getElementById('cartItems').innerHTML=entries.map(([id,x])=>`<div class="cartrow"><div><b>${x.name}</b><div style="color:#999;font-size:10px;margin-top:4px">${x.vendor}</div><div class="price" style="margin-top:5px">RM ${(x.price*x.qty).toFixed(2)}</div></div><div class="qty"><button onclick="changeQty('${id}',-1)">−</button><b>${x.qty}</b><button onclick="changeQty('${id}',1)">＋</button></div></div>`).join('');
