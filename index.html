@@ -83,7 +83,7 @@ button{font:inherit;cursor:pointer;border:0}.app{max-width:480px;margin:0 auto;m
   <div id="vendorPage" class="page">
     <section class="section"><button class="back" onclick="showPage('homePage')">← 返回夜市</button></section>
     <div class="vendorhero"><h2 id="vendorTitle">红衣 AH BOY 炒粿条</h2><p id="vendorSubtitle">槟城风味 · OUG Public Bank 前面 · 周四</p></div>
-    <section class="section"><img class="storefront-photo" src="./ahboy-storefront.jpg" alt="AH BOY 槟城炒粿条星期二 Sri Petaling 夜市真实摊口门面"><p class="storefront-caption">AH BOY 槟城炒粿条 · Sri Petaling 线上摊位门面照</p><div class="sectionhead"><h2>摊主菜单</h2><small>现点现做</small></div><div id="menuList"></div></section>
+    <section class="section"><img class="storefront-photo" src="./ahboy-storefront.jpg" alt="AH BOY 槟城炒粿条星期二 Sri Petaling 夜市真实摊口门面"><p class="storefront-caption" id="storefrontCaption">AH BOY 槟城炒粿条 · 夜市线上摊位门面照</p><div class="sectionhead"><h2>摊主菜单</h2><small>现点现做</small></div><div id="menuList"></div></section>
   </div>
 
   <div id="cartPage" class="page">
@@ -146,7 +146,7 @@ const menus={
 };
 let cart={},method='pickup',lastVendor='ahboy';
 function showPage(id,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');if(btn){document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));btn.classList.add('active')}window.scrollTo(0,0);if(id==='cartPage')renderCart();if(id==='checkoutPage')renderCheckout()}
-function openVendor(key){lastVendor=key;const v=menus[key];document.getElementById('vendorTitle').textContent=v.title;document.getElementById('vendorSubtitle').textContent=v.subtitle;if(v.storefront){document.getElementById('menuList').innerHTML=`<img class="menuposter" src="${v.storefront}" alt="串上瘾烤夜市烧烤摊位门面" style="width:100%;border-radius:14px;margin:12px 0"><div class="menuitem"><div class="menuemoji">🍢</div><div class="menudesc"><b>串上瘾烤 · 夜市烧烤</b><p>${v.description}</p></div></div>`+v.items.map(i=>`<div class="menuitem">${i.photo?`<img src="${i.photo}" alt="${i.name}" style="width:112px;height:112px;object-fit:cover;border-radius:12px;margin-right:12px">`:''}<div class="menudesc"><b>${i.name}</b><p>${i.desc}</p><div class="price">RM ${i.price.toFixed(2)}</div><button class="add" type="button" data-action="add-to-cart" data-vendor="${key}" data-item-id="${i.id}">＋ 加入购物车</button></div></div>`).join('');}else{document.getElementById('menuList').innerHTML=(v.poster?`<img class="menuposter" src="${v.poster}" alt="AH BOY 槟城炒粿条菜单">`: '')+v.items.map(i=>`<div class="menuitem"><div class="menuemoji">${i.emoji}</div><div class="menudesc"><b>${i.name}</b><p>${i.desc}</p><div class="price">RM ${i.price.toFixed(2)}</div><button class="add" type="button" data-action="add-to-cart" data-vendor="${key}" data-item-id="${i.id}">＋ 加入购物车</button></div></div>`).join('');}showPage('vendorPage')}
+function openVendor(key){lastVendor=key;const v=menus[key];document.getElementById('vendorTitle').textContent=v.title;const activeMarket=(typeof weeklyMarkets!=='undefined'&&weeklyMarkets[selectedMarketDay])?weeklyMarkets[selectedMarketDay]:null;document.getElementById('vendorSubtitle').textContent=(key==='ahboy'&&activeMarket)?`槟城风味 · ${activeMarket.day} · ${activeMarket.place} Pasar Malam`:v.subtitle;if(key==='ahboy'&&activeMarket){const caption=document.getElementById('storefrontCaption');if(caption)caption.textContent=`AH BOY 槟城炒粿条 · ${activeMarket.day} ${activeMarket.place} 线上摊位门面照`;}if(v.storefront){document.getElementById('menuList').innerHTML=`<img class="menuposter" src="${v.storefront}" alt="串上瘾烤夜市烧烤摊位门面" style="width:100%;border-radius:14px;margin:12px 0"><div class="menuitem"><div class="menuemoji">🍢</div><div class="menudesc"><b>串上瘾烤 · 夜市烧烤</b><p>${v.description}</p></div></div>`+v.items.map(i=>`<div class="menuitem">${i.photo?`<img src="${i.photo}" alt="${i.name}" style="width:112px;height:112px;object-fit:cover;border-radius:12px;margin-right:12px">`:''}<div class="menudesc"><b>${i.name}</b><p>${i.desc}</p><div class="price">RM ${i.price.toFixed(2)}</div><button class="add" type="button" data-action="add-to-cart" data-vendor="${key}" data-item-id="${i.id}">＋ 加入购物车</button></div></div>`).join('');}else{document.getElementById('menuList').innerHTML=(v.poster?`<img class="menuposter" src="${v.poster}" alt="AH BOY 槟城炒粿条菜单">`: '')+v.items.map(i=>`<div class="menuitem"><div class="menuemoji">${i.emoji}</div><div class="menudesc"><b>${i.name}</b><p>${i.desc}</p><div class="price">RM ${i.price.toFixed(2)}</div><button class="add" type="button" data-action="add-to-cart" data-vendor="${key}" data-item-id="${i.id}">＋ 加入购物车</button></div></div>`).join('');}showPage('vendorPage')}
 function addItem(vendor,id,button){
   const menu = menus[vendor];
   if (!menu || !Array.isArray(menu.items)) {
@@ -215,6 +215,17 @@ const weeklyMarkets = [
 ];
 let selectedMarketDay = 3;
 
+function ahboyVendorCard(market) {
+  return `<article class="vendor" role="button" tabindex="0" onclick="openVendor('ahboy')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openVendor('ahboy')}"><div class="foodpic" style="height:125px;background:#8f1e23;padding:5px"><img src="./ahboy-storefront.jpg" alt="AH BOY 槟城炒粿条" style="width:100%;height:100%;object-fit:cover;object-position:center 30%;border-radius:10px"></div><div class="vendorbody"><div class="vendorname">AH BOY 槟城炒粿条</div><div class="vendorinfo">槟城风味 · 双炒铁锅 · ${market.day} ${market.place}</div><div class="vendorfoot"><span class="open">● 线上菜单</span><button class="view" onclick="event.stopPropagation();openVendor('ahboy')">逛摊位</button></div></div></article>`;
+}
+function otherMarketVendors(includeAhBoy) {
+  const cards = [
+    `<article class="vendor"><div class="foodpic">🍗</div><div class="vendorbody"><div class="vendorname">阿明香脆炸鸡</div><div class="vendorinfo">夜市人气小吃 · 示例摊位</div><div class="vendorfoot"><span class="open">● 营业中</span><button class="view" onclick="openVendor('chicken')">逛摊位</button></div></div></article>`,
+    `<article class="vendor"><div class="foodpic">🥤</div><div class="vendorbody"><div class="vendorname">清凉鲜果茶</div><div class="vendorinfo">手摇饮料 · 示例摊位</div><div class="vendorfoot"><span class="open">● 营业中</span><button class="view" onclick="openVendor('drink')">逛摊位</button></div></div></article>`,
+    `<article class="vendor"><div class="foodpic">🍡</div><div class="vendorbody"><div class="vendorname">甜心糯米糍</div><div class="vendorinfo">传统甜品 · 示例摊位</div><div class="vendorfoot"><span class="open">● 营业中</span><button class="view" onclick="openVendor('dessert')">逛摊位</button></div></div></article>`
+  ];
+  return cards.join('');
+}
 function selectMarketDay(index) {
   selectedMarketDay = index;
   const market = weeklyMarkets[index];
@@ -224,22 +235,22 @@ function selectMarketDay(index) {
   });
   document.getElementById('marketTag').textContent = `📍 ${market.day} · ${market.en}`;
   document.getElementById('marketTitle').textContent = market.title;
-  document.getElementById('marketDescription').textContent =
-    index === 3 ? '今晚的夜市，就从这里开始逛！' : `${market.day}固定夜市地点 · 档口与菜单资料即将加入。`;
+  document.getElementById('marketDescription').textContent = '今晚的夜市，就从这里开始逛！';
 
   const grid = document.getElementById('vendorGrid');
-  if (index === 3) {
-    grid.innerHTML = originalOugVendors;
-  } else if (index === 1) {
-    grid.innerHTML = `<article class="vendor" role="button" tabindex="0" onclick="openVendor('ahboy')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openVendor('ahboy')}"><div class="foodpic" style="height:125px;background:#8f1e23;padding:5px"><img src="./ahboy-storefront.jpg" alt="AH BOY 槟城炒粿条" style="width:100%;height:100%;object-fit:cover;object-position:center 30%;border-radius:10px"></div><div class="vendorbody"><div class="vendorname">AH BOY 槟城炒粿条</div><div class="vendorinfo">槟城风味 · 双炒铁锅 · 星期二 Sri Petaling</div><div class="vendorfoot"><span class="open">● 线上菜单</span><button class="view" onclick="event.stopPropagation();openVendor('ahboy')">逛摊位</button></div></div></article><article class="vendor" role="button" tabindex="0" onclick="openVendor('skewer')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openVendor('skewer')}"><div class="foodpic" style="height:125px;padding:5px;background:#f6e4bd"><img src="./chuan-shang-yin.jpg" alt="串上瘾烤烧烤摊位门面" style="width:100%;height:100%;object-fit:cover;object-position:center;border-radius:10px"></div><div class="vendorbody"><div class="vendorname">串上瘾烤</div><div class="vendorinfo">羊肉串 · 鸡肉串 · 猪肉串</div><div class="vendorfoot"><span class="open">● 新加入</span><button class="view" onclick="event.stopPropagation();openVendor('skewer')">逛摊位</button></div></div></article>`;
+  if (index === 0) {
+    // Monday remains an active market: show other vendors, but not AH BOY.
+    grid.innerHTML = otherMarketVendors(false);
   } else {
-    grid.innerHTML = `<div class="empty" style="grid-column:1/-1;text-align:center;padding:24px 14px;color:#8a817a;line-height:1.7">
-      📍 ${market.title}<br>
-      夜市地点已加入。<br>
-      档口、食物照片及菜单资料，我们接下来逐步收录。
-    </div>`;
+    let cards = ahboyVendorCard(market);
+    if (index === 1) {
+      cards += `<article class="vendor" role="button" tabindex="0" onclick="openVendor('skewer')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openVendor('skewer')}"><div class="foodpic" style="height:125px;padding:5px;background:#f6e4bd"><img src="./chuan-shang-yin.jpg" alt="串上瘾烤烧烤摊位门面" style="width:100%;height:100%;object-fit:cover;object-position:center;border-radius:10px"></div><div class="vendorbody"><div class="vendorname">串上瘾烤</div><div class="vendorinfo">羊肉串 · 鸡肉串 · 猪肉串</div><div class="vendorfoot"><span class="open">● 新加入</span><button class="view" onclick="event.stopPropagation();openVendor('skewer')">逛摊位</button></div></div></article>`;
+    }
+    if (index === 3) cards += otherMarketVendors(false);
+    grid.innerHTML = cards;
   }
-  document.getElementById('vendorSectionTitle').textContent = '🍢 ' + (index === 3 ? '今晚逛摊' : (index === 1 ? 'Sri Petaling 线上摊位' : '即将加入的夜市档口'));
+  const headings = ['PJ SS2 今晚逛摊', 'Sri Petaling 线上摊位', 'Kuchai Lama 线上摊位', 'OUG 今晚逛摊', 'Taman Desa 线上摊位', 'Setia Alam 线上摊位', 'Taman Megah 线上摊位'];
+  document.getElementById('vendorSectionTitle').textContent = '🍢 ' + headings[index];
 }
 document.getElementById('dayStrip').addEventListener('click', function(event) {
   const button = event.target.closest('[data-market-day]');
