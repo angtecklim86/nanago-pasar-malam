@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NaNaGo 商家中心</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f6f5f2;color:#292522;font-family:Arial,"Microsoft YaHei",sans-serif}
+header{background:#b91f32;color:white;padding:24px 20px;border-radius:0 0 22px 22px}
+header h1{margin:0;font-size:25px}
+header p{margin:8px 0 0;opacity:.9}
+main{max-width:650px;margin:auto;padding:18px}
+.card{background:white;border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 3px 14px #0000000a}
+h2{font-size:18px;margin:0 0 15px}
+.stall{font-size:23px;font-weight:bold}
+.muted{color:#888;font-size:13px;margin-top:7px}
+.statuses{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+button{cursor:pointer;border:0;border-radius:12px;padding:13px 8px;font-size:14px;font-weight:bold}
+.statuses button{background:#f1f0ed;color:#555}
+.statuses button.active{background:#b91f32;color:white}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat{background:#f8f6f2;border-radius:12px;padding:16px}
+.number{font-size:28px;font-weight:bold;margin-top:8px}
+.order{color:#888;font-size:14px}
+.action{width:100%;background:#b91f32;color:white;margin-top:12px}
+</style>
+</head>
+<body>
+<header>
+<h1>NaNaGo 商家中心</h1>
+<p>让夜市走进每一个家庭</p>
+</header>
+<main>
+<div class="card">
+<div class="stall">🔴 AH BOY 炒粿条</div>
+<div class="muted">我的摊位 · 星期二至星期日</div>
+</div>
+
+<div class="card">
+<h2>我的营业状态</h2>
+<div class="statuses">
+<button onclick="setStatus('open',this)">🟢 营业中</button>
+<button class="active" onclick="setStatus('closed',this)">🔴 已收摊</button>
+<button onclick="setStatus('paused',this)">🟠 暂停接单</button>
+</div>
+<p id="statusText" class="muted">目前状态：已收摊（演示）</p>
+</div>
+
+<div class="card">
+<h2>订单管理</h2>
+<div class="stats">
+<div class="stat">
+<div class="order">新订单</div>
+<div class="number">0</div>
+</div>
+<div class="stat">
+<div class="order">准备中</div>
+<div class="number">0</div>
+</div>
+<div class="stat">
+<div class="order">已完成</div>
+<div class="number">0</div>
+</div>
+<div class="stat">
+<div class="order">今日营业额</div>
+<div class="number">RM 0</div>
+</div>
+</div>
+</div>
+
+<div class="card">
+<h2>快速管理</h2>
+<button class="action" onclick="alert('菜单管理功能将在下一阶段开发')">🍜 我的菜单</button>
+<button class="action" onclick="alert('订单记录功能将在下一阶段开发')">📋 订单记录</button>
+<button class="action" onclick="alert('营业报表功能将在下一阶段开发')">📊 营业报表</button>
+</div>
+
+<p class="muted" style="text-align:center">NaNaGo Pasar Malam · Vendor Demo</p>
+</main>
+
+<script>
+function setStatus(status,button){
+document.querySelectorAll('.statuses button').forEach(b=>b.classList.remove('active'));
+button.classList.add('active');
+const names={open:'营业中',closed:'已收摊',paused:'暂停接单'};
+document.getElementById('statusText').textContent='目前状态：'+names[status]+'（演示）';
+}
+</script>
+</body>
+</html>
