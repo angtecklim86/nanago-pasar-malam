@@ -86,6 +86,43 @@ button.classList.add('active');
 const names={open:'营业中',closed:'已收摊',paused:'暂停接单'};
 document.getElementById('statusText').textContent='目前状态：'+names[status]+'（演示）';
 }
-</script>
+  function playOrderSound() {
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  if (!AudioCtx) return;
+
+  const audio = new AudioCtx();
+  [0, 1, 2].forEach((i) => {
+    const oscillator = audio.createOscillator();
+    const gain = audio.createGain();
+    oscillator.connect(gain);
+    gain.connect(audio.destination);
+    oscillator.frequency.value = 880;
+    gain.gain.value = 0.15;
+    oscillator.start(audio.currentTime + i * 0.25);
+    oscillator.stop(audio.currentTime + i * 0.25 + 0.15);
+  });
+}
+
+function testNewOrderNotification() {
+  playOrderSound();
+
+  alert("🔔 NaNaGo 新订单！\n\n订单编号：NG-TEST-001\n顾客：测试顾客\n请尽快准备订单！");
+
+  if ("Notification" in window) {
+    if (Notification.permission === "granted") {
+      new Notification("NaNaGo 新订单", {
+        body: "收到测试订单 NG-TEST-001，请查看摊主端。"
+      });
+    } else if (Notification.permission !== "denied") {
+      Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+          new Notification("NaNaGo 新订单", {
+            body: "通知测试成功！"
+          });
+        }
+      });
+    }
+  }
+}</script>
 </body>
 </html>
